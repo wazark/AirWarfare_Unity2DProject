@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [Header("Player Bullets Settings")]
+    public GameObject bulletPrefab;
+    public Transform weaponPosition;
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         
