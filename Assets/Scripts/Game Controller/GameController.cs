@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour
 
     [Header("Enemy Bullets Settings")]
     public GameObject enemyBulletPrefab;
-    public Transform enemyWeapon;
+    //public Transform enemyWeapon;
 
     [Header("SFX Settings")]
     public GameObject explosionPrefab;

@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour
     [Header("Private Settings")]
     private GameController _gameController;
     private CharacterController _characterController;
+    [Header("Teste")]
+    public Transform enemyWeapon;
 
     [Header("Enemy Bullet Settings")]
     public float bulletSpeed;
@@ -17,7 +19,14 @@ public class Enemy : MonoBehaviour
     public int maxShoot;
 
     private bool isShooting;
+
+    [Header("Random Settings")] 
     public bool isRandomReload;
+    public bool isRandomShootTimer;
+    public float[] randShootTimer;
+    public bool isRandomReloadTimer;
+    public float[] randReloadTimer;
+
 
     
 
@@ -88,13 +97,14 @@ public class Enemy : MonoBehaviour
 
     void Shoot()
     {
+        enemyWeapon.right = _characterController.transform.position - transform.position;
         if (isShooting == false && amountShoot > 0)
-        {
-            _gameController.enemyWeapon.right = _characterController.transform.position - transform.position;
+        {            
             amountShoot--;
-            GameObject temp = Instantiate(_gameController.enemyBulletPrefab, _gameController.enemyWeapon.position, _gameController.enemyWeapon.localRotation);
-            temp.GetComponent<Rigidbody2D>().velocity = _gameController.enemyWeapon.right * bulletSpeed;
+            GameObject temp = Instantiate(_gameController.enemyBulletPrefab, enemyWeapon.position, enemyWeapon.localRotation);
+            temp.GetComponent<Rigidbody2D>().velocity = enemyWeapon.right * bulletSpeed;
             temp.transform.up = _characterController.transform.position - transform.position;
+
             if(amountShoot <=0)
             {
                 amountShoot = 0;
@@ -106,16 +116,35 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    IEnumerator enemyShootTime()  //delay entre cada tiro
+    IEnumerator enemyShootTime()  //delay entre cada tiro - random ou não
     {
-        yield return new WaitForSecondsRealtime(shootTimer);                
+        switch (isRandomShootTimer)
+        {
+            case true:
+                yield return new WaitForSecondsRealtime(Random.Range(randShootTimer[0], randShootTimer[1]));
+                break;
+
+            case false:
+                yield return new WaitForSecondsRealtime(shootTimer);
+                break;
+        }
+        
         Shoot();
     }
     IEnumerator enemyReloadWeapon() //recarrega os tiros do inimigo conforme a bool de ser random ou não.
     {
-        yield return new WaitForSecondsRealtime(reloadCooldown);
+        switch(isRandomReloadTimer)
+        {
+            case true:
+                yield return new WaitForSecondsRealtime(Random.Range(randReloadTimer[0], randReloadTimer[1]));
+                break;
 
-        switch(isRandomReload)
+            case false:
+                yield return new WaitForSecondsRealtime(reloadCooldown);
+                break;
+        }
+
+        switch (isRandomReload)
         {
             case true:
 
