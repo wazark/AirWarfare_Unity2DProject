@@ -30,7 +30,10 @@ public class GameController : MonoBehaviour
     public Camera mainCamera;
     public Transform leftCameraLimit;
     public Transform rightCameraLimit;
+    public Transform lastCameraPosition;
     public float cameraSpeedMove;
+    public float sceneMoveSpeed;
+    
 
     
     
@@ -47,7 +50,8 @@ public class GameController : MonoBehaviour
 
     private void LateUpdate()
     {
-        cameraPositionControll();   
+        cameraPositionControll();
+        sceneMovement();
     }
     void cameraPositionControll()
     {
@@ -63,14 +67,17 @@ public class GameController : MonoBehaviour
         {
             moveCamera();
         }
-        
-
     }
 
     void moveCamera()
     {
         Vector3 newCameraPosition = new Vector3(_characterController.transform.position.x, mainCamera.transform.position.y, -10f);
         mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, newCameraPosition, cameraSpeedMove * Time.deltaTime);
+    }
+
+    void sceneMovement()
+    {
+        mainCamera.transform.position = Vector3.MoveTowards(mainCamera.transform.position, new Vector3(mainCamera.transform.position.x, lastCameraPosition.position.y, -10f), sceneMoveSpeed * Time.deltaTime);
     }
 
     void playerMoveLimit()
