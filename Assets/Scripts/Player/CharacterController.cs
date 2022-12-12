@@ -10,8 +10,7 @@ public class CharacterController : MonoBehaviour
     
 
     [Header("Player Bullets")]
-    public float bulletSpeed;
-    public float bulletDistanceToDestroy;
+    public float bulletSpeed;    
     public float bulletShootTimer;
     private bool isShooting;
 
@@ -30,7 +29,7 @@ public class CharacterController : MonoBehaviour
     {
         playerLocomotion();
     }
-
+        
     void playerLocomotion()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -56,9 +55,6 @@ public class CharacterController : MonoBehaviour
         temp.transform.position = _gameController.weaponPosition.position;
         temp.GetComponent<Rigidbody2D>().velocity = new Vector2(0, bulletSpeed);
         StartCoroutine ("shootCooldown");
-        Destroy(temp, bulletDistanceToDestroy);
-        
-
     }
 
     IEnumerator shootCooldown()
@@ -66,4 +62,5 @@ public class CharacterController : MonoBehaviour
         yield return new WaitForSecondsRealtime(bulletShootTimer);
         isShooting = false;
     }
+   
 }
