@@ -5,17 +5,29 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private GameController _gameController;
+    private CharacterController _characterController;
+    public float bulletSpeed;
     
 
     void Start()
     {
-    _gameController = FindObjectOfType(typeof(GameController)) as GameController;    
+    _gameController = FindObjectOfType(typeof(GameController)) as GameController;
+    _characterController = FindObjectOfType(typeof(CharacterController)) as CharacterController;
     }
 
     
     void Update()
     {
+        _gameController.enemyWeapon.right = _characterController.transform.position - transform.position;
         
+
+        if(Input.GetButtonDown("Fire2"))
+        {            
+            GameObject temp = Instantiate(_gameController.enemyBulletPrefab, _gameController.enemyWeapon.position, _gameController.enemyWeapon.localRotation);            
+            temp.GetComponent<Rigidbody2D>().velocity = _gameController.enemyWeapon.right * bulletSpeed;
+            temp.transform.up = _characterController.transform.position - transform.position;
+
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

@@ -472,6 +472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e2eeda995759ed4a8a6177f947dee15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletSpeed: 8
 --- !u!61 &361962096
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -561,7 +562,8 @@ Transform:
   m_LocalPosition: {x: -2.0086315, y: 1.2262669, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 838071021}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -649,6 +651,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &838071020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 838071021}
+  m_Layer: 0
+  m_Name: enemyWeapom
+  m_TagString: Untagged
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &838071021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838071020}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.125, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 361962098}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &972349888
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,19 +743,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 574144771121164714, guid: fc07b8fbe0d06694fb4c8116fa071cf3, type: 3}
-  weaponPosition: {fileID: 1743443434}
+  playerWeapon: {fileID: 1743443434}
+  enemyBulletPrefab: {fileID: 574144771121164714, guid: 7807394bb364b1b41a598629105e68df, type: 3}
+  enemyWeapon: {fileID: 838071021}
   explosionPrefab: {fileID: 5479539101556990029, guid: 8254324ce17c4de4692a8433de76273c, type: 3}
   loot:
-  - {fileID: 4615488335429031915, guid: 2057835b41794dc4199483a029a776ca, type: 3}
-  - {fileID: 8686133915076152428, guid: 3f7343745f5276e4da023223afe5d965, type: 3}
-  - {fileID: 6345039481215437346, guid: 06433d69f01b06247984fb55e62d4bf2, type: 3}
-  - {fileID: 8686133915076152428, guid: 3f7343745f5276e4da023223afe5d965, type: 3}
-  - {fileID: 6345039481215437346, guid: 06433d69f01b06247984fb55e62d4bf2, type: 3}
-  - {fileID: 8686133915076152428, guid: 3f7343745f5276e4da023223afe5d965, type: 3}
   - {fileID: 8686133915076152428, guid: 3f7343745f5276e4da023223afe5d965, type: 3}
   - {fileID: 6345039481215437346, guid: 06433d69f01b06247984fb55e62d4bf2, type: 3}
   - {fileID: 4615488335429031915, guid: 2057835b41794dc4199483a029a776ca, type: 3}
-  - {fileID: 6345039481215437346, guid: 06433d69f01b06247984fb55e62d4bf2, type: 3}
 --- !u!4 &1094803670
 Transform:
   m_ObjectHideFlags: 0
@@ -748,7 +776,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1743443434}
   m_Layer: 0
-  m_Name: weaponPosition
+  m_Name: playerWeapon
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0

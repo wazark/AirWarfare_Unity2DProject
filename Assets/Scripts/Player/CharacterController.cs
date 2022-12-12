@@ -52,7 +52,7 @@ public class CharacterController : MonoBehaviour
     {
         isShooting = true;
         GameObject temp = Instantiate(_gameController.bulletPrefab);
-        temp.transform.position = _gameController.weaponPosition.position;
+        temp.transform.position = _gameController.playerWeapon.position;
         temp.GetComponent<Rigidbody2D>().velocity = new Vector2(0, bulletSpeed);
         StartCoroutine ("shootCooldown");
     }
