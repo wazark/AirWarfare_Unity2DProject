@@ -2,14 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CharacterController : MonoBehaviour
 {
     [Header("Private Settings")]
     private GameController _gameController;
+    private IAEnemy _aiEnemy;
     private Rigidbody2D playerRB;
-    
+
 
     [Header("Player Bullets")]
+    public Transform playerWeapon;
+    public tagBullets tagShot;
+    public float bulletSize;
+    public int idBullet;
     public float bulletSpeed;    
     public float bulletShootTimer;
     private bool isShooting;
@@ -21,6 +27,11 @@ public class CharacterController : MonoBehaviour
     void Start()
     {
         _gameController = FindObjectOfType(typeof(GameController)) as GameController;
+
+        _gameController._characterController = this;        
+        _gameController.isPlayerAlive = true;
+        
+
         playerRB = GetComponent<Rigidbody2D>();        
     }
 
@@ -29,7 +40,17 @@ public class CharacterController : MonoBehaviour
     {
         playerLocomotion();
     }
-        
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "enemyShoot":                
+                _gameController.hitPlayer();
+                Destroy(collision.gameObject);                
+                break;
+        }
+    }    
     void playerLocomotion()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -51,8 +72,10 @@ public class CharacterController : MonoBehaviour
     void playerShoot()
     {
         isShooting = true;
-        GameObject temp = Instantiate(_gameController.bulletPrefab);
-        temp.transform.position = _gameController.playerWeapon.position;
+        GameObject temp = Instantiate(_gameController.bulletPrefab[idBullet]);
+        temp.transform.tag = _gameController.tagAplication(tagShot);
+        temp.transform.localScale = new Vector3(bulletSize, bulletSize, bulletSize);
+        temp.transform.position = playerWeapon.position;
         temp.GetComponent<Rigidbody2D>().velocity = new Vector2(0, bulletSpeed);
         StartCoroutine ("shootCooldown");
     }

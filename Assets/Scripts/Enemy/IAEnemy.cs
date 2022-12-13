@@ -27,8 +27,7 @@ public enum startShoot
 public class IAEnemy : MonoBehaviour
 {
     [Header("Private Settings")]
-    private GameController _gameController;
-    private CharacterController _characterController;
+    private GameController _gameController;    
 
     [Header("AI Movement Settings")]
     public float speedMove;
@@ -49,7 +48,10 @@ public class IAEnemy : MonoBehaviour
     public Transform enemyWeapon;
 
     [Header("Enemy Bullet Settings")]
+    public tagBullets tagShot;
     public startShoot timerToStartShoot;
+    public float bulletSize;
+    public int idBullet;
     public float startShootCooldown;
     public float bulletSpeed;
     public float shootTimer;
@@ -70,7 +72,7 @@ public class IAEnemy : MonoBehaviour
     void Start()
     {
         _gameController = FindObjectOfType(typeof(GameController)) as GameController;
-        _characterController = FindObjectOfType(typeof(CharacterController)) as CharacterController;
+       
         
 
         zRotation = transform.eulerAngles.z;
@@ -89,8 +91,7 @@ public class IAEnemy : MonoBehaviour
             case "playerShoot":
 
                 Destroy(collision.gameObject);
-                GameObject temp = Instantiate(_gameController.explosionPrefab, transform.position, transform.localRotation);
-                Destroy(temp, 0.5f);
+                GameObject temp = Instantiate(_gameController.explosionPrefab, transform.position, _gameController.explosionPrefab.transform.localRotation);                
 
                 spawnLoot();
 
@@ -100,9 +101,9 @@ public class IAEnemy : MonoBehaviour
 
             case "Player":
 
-                temp = Instantiate(_gameController.explosionPrefab, transform.position, transform.localRotation);
-                Destroy(temp, 0.5f);
+                temp = Instantiate(_gameController.explosionPrefab, transform.position, _gameController.explosionPrefab.transform.localRotation);
 
+                spawnLoot();
                 Destroy(this.gameObject);
 
                 break;
@@ -205,13 +206,16 @@ public class IAEnemy : MonoBehaviour
 
     void Shoot()
     {
-        enemyWeapon.right = _characterController.transform.position - transform.position;
-        if (isShooting == false && amountShoot > 0)
+        
+        if (isShooting == false && amountShoot > 0 && _gameController.isPlayerAlive == true)
         {
+            enemyWeapon.right = _gameController._characterController.transform.position - transform.position;
             amountShoot--;
-            GameObject temp = Instantiate(_gameController.enemyBulletPrefab, enemyWeapon.position, enemyWeapon.localRotation);
+            GameObject temp = Instantiate(_gameController.enemyBulletPrefab[idBullet], enemyWeapon.position, enemyWeapon.localRotation);
+            temp.transform.tag = _gameController.tagAplication(tagShot);
+            temp.transform.localScale = new Vector3(bulletSize, bulletSize, bulletSize);
             temp.GetComponent<Rigidbody2D>().velocity = enemyWeapon.right * bulletSpeed;
-            temp.transform.up = _characterController.transform.position - transform.position;
+            temp.transform.up = _gameController._characterController.transform.position - transform.position;
 
             if (amountShoot <= 0)
             {
