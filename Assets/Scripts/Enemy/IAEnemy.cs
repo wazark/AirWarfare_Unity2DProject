@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 
+public enum direction 
+{
+    Up, Down, Left, Right
+}
+
 public class IAEnemy : MonoBehaviour
 {
     [Header("AI Movement Settings")]
@@ -10,12 +15,11 @@ public class IAEnemy : MonoBehaviour
     public float[] placeToCurve;
     public float curveDegress;
     public float increment;
+    public direction movDirection;
 
     [Header("AI Checks")]
-    public bool isMultiplesCurves; // working in progress;
-    public bool isHorizontalMove;
-    public bool isLeftSide;
-
+    public bool isMultiplesCurves; // working in progress;    
+    
 
     [Header("Privates")]    
     private float incremented;    
@@ -47,8 +51,6 @@ public class IAEnemy : MonoBehaviour
 
                 case true:
 
-                
-                
                 break;
         }
         
@@ -56,9 +58,17 @@ public class IAEnemy : MonoBehaviour
     }
     void singleMovementationCurve()
     {
-        switch(isHorizontalMove)
+        switch(movDirection)
         {
-            case false:
+            case direction.Up:
+                if (transform.position.y >= placeToCurve[0] && isCurve == false)
+                {
+                    isCurve = true;
+                }
+                locomotionLogic();
+                break;
+                                
+            case direction.Down:
                 if (transform.position.y <= placeToCurve[0] && isCurve == false)
                 {
                     isCurve = true;
@@ -66,26 +76,20 @@ public class IAEnemy : MonoBehaviour
                 locomotionLogic();
                 break;
 
-                case true:
-                switch (isLeftSide)
+            case direction.Left:
+                if (transform.position.x >= placeToCurve[0] && isCurve == false)
                 {
-                    case false:
-                        if (transform.position.x <= placeToCurve[0] && isCurve == false)
-                        {
-                            isCurve = true;
-                        }
-                        locomotionLogic();
-                        break;
-
-                    case true:
-                            if (transform.position.x >= placeToCurve[0] && isCurve == false)
-                        {
-                            isCurve = true;
-                        }
-                        locomotionLogic();
-                        break;
+                    isCurve = true;
                 }
-                
+                locomotionLogic();
+                break;
+
+            case direction.Right:
+                if (transform.position.x <= placeToCurve[0] && isCurve == false)
+                {
+                    isCurve = true;
+                }
+                locomotionLogic();
                 break;
         }
         
