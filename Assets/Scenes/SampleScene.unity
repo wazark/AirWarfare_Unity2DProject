@@ -22818,7 +22818,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1597096759}
   m_Layer: 0
-  m_Name: cogumelos
+  m_Name: Cogumelos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23346,7 +23346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1630231069}
   m_Layer: 0
-  m_Name: floresta
+  m_Name: Floresta
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
