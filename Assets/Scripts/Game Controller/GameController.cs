@@ -106,6 +106,7 @@ public class GameController : MonoBehaviour
     private void LateUpdate()
     {
         introToGameplay();
+        sceneMovement();
     }
 
     void cameraPositionControll()
@@ -197,7 +198,7 @@ public class GameController : MonoBehaviour
     {
         if (currentState == gameState.GamePlay)
         {
-            sceneMovement();
+            //sceneMovement();
 
             if (isAutoPilot == true)
             {
@@ -205,6 +206,11 @@ public class GameController : MonoBehaviour
             }
             else
                 sceneMoveSpeed = 0.5f;
+            if(mainCamera.orthographicSize <= 5f)
+            {
+                mainCamera.orthographicSize += 0.01f;
+            }    
+            
 
         }
         else if (currentState == gameState.Intro)
@@ -235,6 +241,7 @@ public class GameController : MonoBehaviour
         if (isTakeOff == true)
         {
             takeoffSpeed += 0.005f;
+            mainCamera.orthographicSize = 2.0f;
             _characterController.playerRB.velocity = new Vector2(0, takeoffSpeed);
 
             yield return new WaitForSecondsRealtime(cooldownToTakeOff);
