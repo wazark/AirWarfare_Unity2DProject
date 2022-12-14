@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum tagBullets
@@ -211,7 +210,6 @@ public class GameController : MonoBehaviour
         else if (currentState == gameState.Intro)
         {
             StartCoroutine("planeTakeOff");
-            _characterController.gasFog.GetComponent<SpriteRenderer>().color = Color.Lerp(_characterController.initialGasFogColor, _characterController.gasFogColor, 0.2f);
         }
     }
     IEnumerator delaySpawnPlayer()
@@ -224,7 +222,7 @@ public class GameController : MonoBehaviour
     }
     IEnumerator introGame()
     {
-        _characterController.gasFog.GetComponent<SpriteRenderer>().color = _characterController.initialGasFogColor;
+        _characterController.gasFog.GetComponent<SpriteRenderer>().enabled = false;
         _characterController.transform.localScale = new Vector3(initialPlaneSize, initialPlaneSize, initialPlaneSize);
         _characterController.transform.position = planeInitialPosition.position;
         _characterController.playerShadow.transform.localScale = new Vector3(shadowInitialSize, shadowInitialSize, shadowInitialSize);
@@ -250,7 +248,7 @@ public class GameController : MonoBehaviour
         }
         _characterController.playerRB.velocity = new Vector2(0, flyingSpeed);
         StartCoroutine("planeSizeEffect");
-        //_characterController.gasFog.GetComponent<SpriteRenderer>().enabled = true;
+        _characterController.gasFog.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     IEnumerator planeSizeEffect()

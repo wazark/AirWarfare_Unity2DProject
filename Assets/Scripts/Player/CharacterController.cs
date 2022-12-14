@@ -22,6 +22,7 @@ public class CharacterController : MonoBehaviour
     public int idBullet;
     public float bulletSpeed;
     public float bulletShootTimer;
+    public float gasFogSpeed;
     private bool isShooting;
     public Color noDamgeColor;
     public Color gasFogColor;
