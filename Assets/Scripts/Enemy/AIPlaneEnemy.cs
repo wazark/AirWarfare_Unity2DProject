@@ -24,7 +24,7 @@ public enum startShoot
     immediately, wait
 }
 
-public class IAEnemy : MonoBehaviour
+public class AIPlaneEnemy : MonoBehaviour
 {
     [Header("Private Settings")]
     private GameController _gameController;    

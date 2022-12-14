@@ -7,7 +7,7 @@ public class CharacterController : MonoBehaviour
 {
     [Header("Private Settings")]
     private GameController _gameController;
-    private IAEnemy _aiEnemy;
+    private AIPlaneEnemy _aiEnemy;
     private Rigidbody2D playerRB;
     private SpriteRenderer playerSR;
 
