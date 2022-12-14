@@ -31,6 +31,7 @@ public class GameController : MonoBehaviour
     public int currentLife;
     public int maxLife;
     public float cooldownSpawnPlayer;
+    public float cooldownNoDamage;
     public bool isGodModeOn;
     public bool isPlayerAlive;
   
@@ -172,7 +173,9 @@ public class GameController : MonoBehaviour
     IEnumerator delaySpawnPlayer()
     {
         yield return new WaitForSecondsRealtime(cooldownSpawnPlayer);
-        Instantiate(playerPrefab[idPlayerPlane], playerSpawnLocation.position, playerSpawnLocation.localRotation);
+        GameObject temp= Instantiate(playerPrefab[idPlayerPlane], playerSpawnLocation.position, playerSpawnLocation.localRotation);
+        yield return new WaitForEndOfFrame();
+        _characterController.StartCoroutine("spawnNoDamage");
         isPlayerAlive = true;
     }
 }

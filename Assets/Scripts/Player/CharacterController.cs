@@ -9,16 +9,19 @@ public class CharacterController : MonoBehaviour
     private GameController _gameController;
     private IAEnemy _aiEnemy;
     private Rigidbody2D playerRB;
+    private SpriteRenderer playerSR;
 
 
     [Header("Player Bullets")]
     public Transform playerWeapon;
+    public Transform gasFog;
     public tagBullets tagShot;
     public float bulletSize;
     public int idBullet;
     public float bulletSpeed;    
     public float bulletShootTimer;
     private bool isShooting;
+    public Color noDamgeColor;
 
     [Header("Player Stats")]
     public float speedMove;
@@ -32,7 +35,8 @@ public class CharacterController : MonoBehaviour
         _gameController.isPlayerAlive = true;
         
 
-        playerRB = GetComponent<Rigidbody2D>();        
+        playerRB = GetComponent<Rigidbody2D>();
+        playerSR = GetComponent<SpriteRenderer>();
     }
 
     
@@ -85,5 +89,27 @@ public class CharacterController : MonoBehaviour
         yield return new WaitForSecondsRealtime(bulletShootTimer);
         isShooting = false;
     }
-   
+
+    IEnumerator spawnNoDamage()
+    {
+        Collider2D col = GetComponent< Collider2D >();
+        col.enabled = false;
+        playerSR.color = noDamgeColor;        
+        StartCoroutine("respawnVisualEffect");
+        yield return new WaitForSecondsRealtime(_gameController.cooldownNoDamage);
+        col.enabled = true;
+        playerSR.color = Color.white;
+        playerSR.enabled = true;
+        StopCoroutine("respawnVisualEffect");
+        
+    }
+    IEnumerator respawnVisualEffect()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+            playerSR.enabled = !playerSR.enabled;
+
+        StartCoroutine("respawnVisualEffect");
+
+    }
+
 }

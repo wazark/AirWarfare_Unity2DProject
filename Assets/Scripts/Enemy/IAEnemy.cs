@@ -43,6 +43,7 @@ public class IAEnemy : MonoBehaviour
     private bool isArrived;
     private bool leftSide;
     private bool isShooting;
+    private bool isAiVisible;
     
     [Header("Weapon Transform")]
     public Transform enemyWeapon;
@@ -113,6 +114,11 @@ public class IAEnemy : MonoBehaviour
     private void OnBecameVisible()
     {
         StartCoroutine("enemyStartShoot");
+        isAiVisible= true;
+    }
+    private void OnBecameInvisible()
+    {
+        isAiVisible = false;
     }
     void spawnLoot()
     {
@@ -134,7 +140,7 @@ public class IAEnemy : MonoBehaviour
                 idItem = 0; // CoinBox
             }
 
-            Instantiate(_gameController.loot[idItem], transform.position, transform.localRotation);
+            Instantiate(_gameController.loot[idItem], transform.position,  transform.localRotation = new Quaternion(0,0,0,0));
         }
     }
 
@@ -206,8 +212,8 @@ public class IAEnemy : MonoBehaviour
 
     void Shoot()
     {
-        
-        if (isShooting == false && amountShoot > 0 && _gameController.isPlayerAlive == true)
+
+        if (isShooting == false && amountShoot > 0 && _gameController.isPlayerAlive == true && isAiVisible == true)
         {
             enemyWeapon.right = _gameController._characterController.transform.position - transform.position;
             amountShoot--;

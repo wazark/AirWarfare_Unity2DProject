@@ -284,9 +284,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9693d5901e30e2046b92fe60ad66c31f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerWeapon: {fileID: 7921440976032557948}
   tagShot: 0
   bulletSize: 1.5
   idBullet: 3
   bulletSpeed: 8
   bulletShootTimer: 0.5
+  noDamgeColor: {r: 1, g: 1, b: 1, a: 0.62352943}
   speedMove: 4
