@@ -140,13 +140,8 @@ public class AIPlaneEnemy : MonoBehaviour
                 idItem = 0; // CoinBox
             }
 
-            Instantiate(_gameController.loot[idItem], transform.position,  transform.localRotation = new Quaternion(0,0,0,0));
+            Instantiate(_gameController.lootPrefabs[idItem], transform.position,  transform.localRotation = new Quaternion(0,0,0,0));
         }
-    }
-
-    void movement()
-    {
-         singleMovementationCurve();
     }
 
     void singleMovementationCurve()

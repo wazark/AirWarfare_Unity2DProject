@@ -21,8 +21,9 @@ public class GameController : MonoBehaviour
     [Header("SFX Prefabs")]
     public GameObject explosionPrefab;
 
-    [Header("Loots Prefabs")]
-    public GameObject[] loot;
+    [Header("Loots Settings")]
+    public GameObject[] lootPrefabs;
+    public float cooldownToShowLoots;
 
     [Header("Player Settings")]
     public GameObject[] playerPrefab;

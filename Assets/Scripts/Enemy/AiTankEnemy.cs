@@ -7,6 +7,14 @@ public class AiTankEnemy : MonoBehaviour
     [Header("Private Settings")]
     private GameController _gameController;
 
+    [Header("AI Movement Settings")]
+    public float speedMove;
+    public float placeToCurve;
+    public float curveDegress;
+    public float increment;
+    public direction movDirection;
+    public bool isCanMove;
+
     [Header("Privates")]
     private float incremented;
     private float zRotation;
@@ -15,6 +23,7 @@ public class AiTankEnemy : MonoBehaviour
     private bool leftSide;
     private bool isShooting;
     private bool isAiVisible;
+    private int idItemLoot;
 
     [Header("Weapon Transform")]
     public Transform enemyWeapon;
@@ -48,7 +57,10 @@ public class AiTankEnemy : MonoBehaviour
     
     void Update()
     {
-        
+        if (isCanMove == true) 
+        {
+            singleMovementationCurve();
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -87,25 +99,92 @@ public class AiTankEnemy : MonoBehaviour
     }
     void spawnLoot()
     {
-        int idItem;
+        
         int rand = Random.Range(0, 100);
         if (rand < 50)
         {
             rand = Random.Range(0, 100);
             if (rand > 85)
             {
-                idItem = 2; // BombBox
+                idItemLoot = 2; // BombBox
             }
             else if (rand > 50)
             {
-                idItem = 1; // HealthBox
+                idItemLoot = 1; // HealthBox
             }
             else
             {
-                idItem = 0; // CoinBox
+                idItemLoot = 0; // CoinBox
             }
 
-            Instantiate(_gameController.loot[idItem], transform.position, transform.localRotation = new Quaternion(0, 0, 0, 0));
+            StartCoroutine("cooldownLoots");
+            //Instantiate(_gameController.lootPrefabs[idItem], transform.position, transform.localRotation = new Quaternion(0, 0, 0, 0));
+        }
+    }
+    IEnumerator cooldownLoots()
+    {
+        yield return new WaitForSecondsRealtime(_gameController.cooldownToShowLoots);
+
+        Instantiate(_gameController.lootPrefabs[idItemLoot], transform.position, transform.localRotation = new Quaternion(0, 0, 0, 0)); // não altera a rotação dos loots caso o inimigo faça curvas 
+    }
+    void singleMovementationCurve()
+    {
+        switch (movDirection)
+        {
+            case direction.Up:
+                if (transform.position.y >= placeToCurve && isCurve == false)
+                {
+                    isCurve = true;
+                }
+                locomotionLogic();
+                break;
+
+            case direction.Down:
+                if (transform.position.y <= placeToCurve && isCurve == false)
+                {
+                    isCurve = true;
+                }
+                locomotionLogic();
+                break;
+
+            case direction.Left:
+                if (transform.position.x >= placeToCurve && isCurve == false)
+                {
+                    isCurve = true;
+                }
+                locomotionLogic();
+                break;
+
+            case direction.Right:
+                if (transform.position.x <= placeToCurve && isCurve == false)
+                {
+                    isCurve = true;
+                }
+                locomotionLogic();
+                break;
+        }
+
+        transform.Translate(Vector3.down * speedMove * Time.deltaTime);
+    }
+
+    void locomotionLogic()
+    {
+        if (isCurve == true && incremented < curveDegress)
+        {
+            zRotation += increment;
+            transform.rotation = Quaternion.Euler(0, 0, zRotation);
+
+            if (increment < 0)
+            {
+                incremented += (increment * -1);
+            }
+            else
+                incremented += increment;
+
+            if (isCurve == true && incremented == curveDegress)
+            {
+                isCurve = false;
+            }
         }
     }
     void Shoot()
