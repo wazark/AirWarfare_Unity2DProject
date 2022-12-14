@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -8,47 +7,51 @@ public class CharacterController : MonoBehaviour
     [Header("Private Settings")]
     private GameController _gameController;
     private AIPlaneEnemy _aiEnemy;
-    private Rigidbody2D playerRB;
+    public Rigidbody2D playerRB;
     private SpriteRenderer playerSR;
 
     [Header("Player GameObjects")]
     public Transform playerWeapon;
     public Transform gasFog;
-    public SpriteRenderer gasFogSR;
+    public GameObject playerShadow;
 
-    [Header("Player Bullets")]    
+
+    [Header("Player Bullets")]
     public tagBullets tagShot;
     public float bulletSize;
     public int idBullet;
-    public float bulletSpeed;    
+    public float bulletSpeed;
     public float bulletShootTimer;
     private bool isShooting;
     public Color noDamgeColor;
+    public Color gasFogColor;
+    public Color initialGasFogColor;
 
     [Header("Player Stats")]
     public float speedMove;
-    
-    
+    public bool isPlayerControlling;
+
+
     void Start()
     {
         _gameController = FindObjectOfType(typeof(GameController)) as GameController;
 
-        _gameController._characterController = this;        
+        _gameController._characterController = this;
         _gameController.isPlayerAlive = true;
-        
+
 
         playerRB = GetComponent<Rigidbody2D>();
         playerSR = GetComponent<SpriteRenderer>();
-        gasFogSR = GetComponent<SpriteRenderer>();
+
     }
 
-    
+
     void Update()
     {
         playerLocomotion();
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space)) // suicide for teste
         {
-            _gameController.hitPlayer();            
+            _gameController.hitPlayer();
         }
     }
 
@@ -56,20 +59,24 @@ public class CharacterController : MonoBehaviour
     {
         switch (collision.gameObject.tag)
         {
-            case "enemyShoot":                
+            case "enemyShoot":
                 _gameController.hitPlayer();
-                Destroy(collision.gameObject);                
+                Destroy(collision.gameObject);
                 break;
         }
-    }    
+    }
     void playerLocomotion()
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-       playerRB.velocity = new Vector2(horizontal * speedMove, vertical * speedMove);
+        if (_gameController.currentState == gameState.GamePlay)
+        {
+            isPlayerControlling = true;
+            playerRB.velocity = new Vector2(horizontal * speedMove, vertical * speedMove);
+        }
 
-        if(Input.GetButton("Fire1") && isShooting == false)
+        if (Input.GetButton("Fire1") && isShooting == false && _gameController.currentState == gameState.GamePlay)
         {
             playerShoot();
         }
@@ -88,7 +95,7 @@ public class CharacterController : MonoBehaviour
         temp.transform.localScale = new Vector3(bulletSize, bulletSize, bulletSize);
         temp.transform.position = playerWeapon.position;
         temp.GetComponent<Rigidbody2D>().velocity = new Vector2(0, bulletSpeed);
-        StartCoroutine ("shootCooldown");
+        StartCoroutine("shootCooldown");
     }
 
     IEnumerator shootCooldown()
@@ -99,28 +106,28 @@ public class CharacterController : MonoBehaviour
 
     IEnumerator spawnNoDamage()
     {
-        Collider2D col = GetComponent< Collider2D >();
+        Collider2D col = GetComponent<Collider2D>();
         col.enabled = false;
         playerSR.color = noDamgeColor;
-        gasFogSR.color = noDamgeColor;
+        gasFog.GetComponent<SpriteRenderer>().color = noDamgeColor;
         StartCoroutine("respawnVisualEffect");
-        print("mudou para a cor nodamage");
+
         yield return new WaitForSecondsRealtime(_gameController.cooldownNoDamage);
         col.enabled = true;
         playerSR.color = Color.white;
-        gasFogSR.color = Color.white;
+        gasFog.GetComponent<SpriteRenderer>().color = gasFogColor;
         playerSR.enabled = true;
-        gasFogSR.enabled = true;
+        gasFog.GetComponent<SpriteRenderer>().enabled = true;
         StopCoroutine("respawnVisualEffect");
-        print("parou a coroutine");
+
 
     }
     IEnumerator respawnVisualEffect()
     {
         yield return new WaitForSecondsRealtime(0.1f);
-        print("piscando");
-        playerSR.enabled = false;
-        gasFogSR.enabled = !gasFogSR.enabled;
+
+        playerSR.enabled = !playerSR.enabled;
+        gasFog.GetComponent<SpriteRenderer>().enabled = !gasFog.GetComponent<SpriteRenderer>().enabled;
 
         StartCoroutine("respawnVisualEffect");
 

@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum tagBullets
@@ -21,7 +21,7 @@ public class GameController : MonoBehaviour
 
     [Header("Player Bullets Settings")]
     public GameObject[] bulletPrefab;
-    
+
 
     [Header("Enemy Bullets Prefabs")]
     public GameObject[] enemyBulletPrefab;
@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour
     public float cooldownNoDamage;
     public bool isGodModeOn;
     public bool isPlayerAlive;
-  
+
     public Transform playerSpawnLocation;
     public Transform upLimit;
     public Transform downLimit;
@@ -58,38 +58,55 @@ public class GameController : MonoBehaviour
     public float cameraSpeedMove;
     public float sceneMoveSpeed;
 
+    [Header("Intro Settings")]
+    public float initialPlaneSize;
+    public float planeIncrementSize;
+    public float shadowInitialSize;
+    public float shadowIncrementSize;
+    public float takeoffSpeed;
+    public float flyingSpeed;
+    public float cooldownToTakeOff;
+    public float cooldownToGameplay;
+    public bool isTakeOff;
+    private bool isAutoPilot;
+    private float currentSpeed;
+    public Vector3 placeDefaultSize;
+    public Vector3 ShadowDefaultSize;
+    public Transform planeInitialPosition;
+
+
+
+
 
     void Start()
     {
         StartCoroutine("introGame");
+        isAutoPilot = true;
+
+
     }
 
     void Update()
     {
-        if(isPlayerAlive == true)
+        if (isPlayerAlive == true)
         {
             playerMoveLimit();
-            
         }
-        
+
+
 
     }
     private void FixedUpdate()
     {
         if (isPlayerAlive == true)
         {
-           
             cameraPositionControll();
         }
     }
 
     private void LateUpdate()
     {
-        if(currentState == gameState.GamePlay ) 
-        {
-            sceneMovement();
-        }
-        
+        introToGameplay();
     }
 
     void cameraPositionControll()
@@ -110,8 +127,8 @@ public class GameController : MonoBehaviour
 
     void moveCamera()
     {
-            Vector3 newCameraPosition = new Vector3(_characterController.transform.position.x, mainCamera.transform.position.y, -10f);
-            mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, newCameraPosition, cameraSpeedMove * Time.deltaTime);
+        Vector3 newCameraPosition = new Vector3(_characterController.transform.position.x, mainCamera.transform.position.y, -10f);
+        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, newCameraPosition, cameraSpeedMove * Time.deltaTime);
     }
 
     void sceneMovement()
@@ -159,7 +176,7 @@ public class GameController : MonoBehaviour
     }
     public void hitPlayer()
     {
-        Instantiate(explosionPrefab, _characterController.transform.position, explosionPrefab.transform.localRotation);        
+        Instantiate(explosionPrefab, _characterController.transform.position, explosionPrefab.transform.localRotation);
         if (isGodModeOn == false)
         {
             Destroy(_characterController.gameObject);
@@ -169,28 +186,100 @@ public class GameController : MonoBehaviour
             if (currentLife >= 0)
             {
                 StartCoroutine("delaySpawnPlayer");
-                //yield return new WaitForSecondsRealtime(cooldownSpawnPlayer);
-                //Instantiate(playerPrefab[idPlayerPlane], playerSpawnLocation.position, playerSpawnLocation.localRotation);
-                //isPlayerAlive = true;
             }
             else
             {
                 print("Game Over");
             }
-        }       
+        }
+    }
+
+    void introToGameplay()
+    {
+        if (currentState == gameState.GamePlay)
+        {
+            sceneMovement();
+
+            if (isAutoPilot == true)
+            {
+                StartCoroutine("automaticPilot");
+            }
+            else
+                sceneMoveSpeed = 0.5f;
+
+        }
+        else if (currentState == gameState.Intro)
+        {
+            StartCoroutine("planeTakeOff");
+            _characterController.gasFog.GetComponent<SpriteRenderer>().color = Color.Lerp(_characterController.initialGasFogColor, _characterController.gasFogColor, 0.2f);
+        }
     }
     IEnumerator delaySpawnPlayer()
     {
         yield return new WaitForSecondsRealtime(cooldownSpawnPlayer);
-        GameObject temp= Instantiate(playerPrefab[idPlayerPlane], playerSpawnLocation.position, playerSpawnLocation.localRotation);
+        GameObject temp = Instantiate(playerPrefab[idPlayerPlane], playerSpawnLocation.position, playerSpawnLocation.localRotation);
         yield return new WaitForEndOfFrame();
         _characterController.StartCoroutine("spawnNoDamage");
         isPlayerAlive = true;
     }
     IEnumerator introGame()
     {
-       // _characterController.gasFogSR.enabled = false;
+        _characterController.gasFog.GetComponent<SpriteRenderer>().color = _characterController.initialGasFogColor;
+        _characterController.transform.localScale = new Vector3(initialPlaneSize, initialPlaneSize, initialPlaneSize);
+        _characterController.transform.position = planeInitialPosition.position;
+        _characterController.playerShadow.transform.localScale = new Vector3(shadowInitialSize, shadowInitialSize, shadowInitialSize);
 
         return null;
     }
+
+    IEnumerator planeTakeOff()
+    {
+        if (isTakeOff == true)
+        {
+            takeoffSpeed += 0.005f;
+            _characterController.playerRB.velocity = new Vector2(0, takeoffSpeed);
+
+            yield return new WaitForSecondsRealtime(cooldownToTakeOff);
+
+            if (takeoffSpeed >= 2.0f)
+            {
+                isTakeOff = false;
+
+            }
+            StartCoroutine("planeTakeOff");
+        }
+        _characterController.playerRB.velocity = new Vector2(0, flyingSpeed);
+        StartCoroutine("planeSizeEffect");
+        //_characterController.gasFog.GetComponent<SpriteRenderer>().enabled = true;
+    }
+
+    IEnumerator planeSizeEffect()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        if (_characterController.transform.localScale != placeDefaultSize)
+        {
+            _characterController.transform.localScale += new Vector3(planeIncrementSize, planeIncrementSize, planeIncrementSize);
+            _characterController.playerShadow.transform.localScale += new Vector3(shadowIncrementSize, shadowIncrementSize, shadowIncrementSize);
+            StartCoroutine("planeSizeEffect");
+        }
+        else
+            currentState = gameState.GamePlay;
+        StopCoroutine("planeSizeEffect");
+    }
+
+    IEnumerator automaticPilot()
+    {
+        if (_characterController.transform.position.y >= 15.0f)
+        {
+            isAutoPilot = false;
+            StopCoroutine("automaticPilot");
+        }
+        else
+            _characterController.playerRB.velocity = new Vector2(0, flyingSpeed);
+        sceneMoveSpeed = 2.5f;
+
+        yield return null;
+    }
+
 }

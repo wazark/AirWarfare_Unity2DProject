@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AiTankEnemy : MonoBehaviour
@@ -48,16 +47,16 @@ public class AiTankEnemy : MonoBehaviour
     public float[] randShootTimer;
     public reloadTimerSelect reloadTimerType;
     public float[] randReloadTimer;
-    
+
     void Start()
     {
         _gameController = FindObjectOfType(typeof(GameController)) as GameController;
     }
 
-    
+
     void Update()
     {
-        if (isCanMove == true) 
+        if (isCanMove == true)
         {
             singleMovementationCurve();
         }
@@ -99,7 +98,7 @@ public class AiTankEnemy : MonoBehaviour
     }
     void spawnLoot()
     {
-        
+
         int rand = Random.Range(0, 100);
         if (rand < 50)
         {

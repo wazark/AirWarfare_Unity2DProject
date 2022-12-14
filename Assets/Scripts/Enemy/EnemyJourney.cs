@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UIElements;
 using UnityEngine;
 
 public class EnemyJourney : MonoBehaviour
@@ -17,13 +15,13 @@ public class EnemyJourney : MonoBehaviour
         StartCoroutine("startMove");
     }
 
-    
+
     void Update()
     {
-        if(isMoving == true)
+        if (isMoving == true)
         {
             enemy.position = Vector3.MoveTowards(enemy.position, checkPoints[idCheckPoint].position, speedMove * Time.deltaTime);
-            if(enemy.position == checkPoints[idCheckPoint].position )
+            if (enemy.position == checkPoints[idCheckPoint].position)
             {
                 isMoving = false;
                 StartCoroutine("startMove");
@@ -39,7 +37,7 @@ public class EnemyJourney : MonoBehaviour
             idCheckPoint = 0;
         }
         yield return new WaitForSeconds(delayStoped);
-        
-        isMoving= true;
+
+        isMoving = true;
     }
 }

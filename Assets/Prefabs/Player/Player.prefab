@@ -27,7 +27,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.03, y: 0.14, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7921440977478597364}
   m_RootOrder: 2
@@ -143,7 +143,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.067, y: -0.88, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7921440977478597364}
   m_RootOrder: 1
@@ -250,7 +250,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.11, y: -0.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7921440976032557948}
   - {fileID: 7921440977456629256}
@@ -369,13 +369,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9693d5901e30e2046b92fe60ad66c31f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerRB: {fileID: 0}
   playerWeapon: {fileID: 7921440976032557948}
   gasFog: {fileID: 7921440977456629256}
-  gasFogSR: {fileID: 7921440977478597367}
+  playerShadow: {fileID: 991685642646713982}
   tagShot: 0
   bulletSize: 1.5
   idBullet: 0
   bulletSpeed: 8
   bulletShootTimer: 0.3
   noDamgeColor: {r: 1, g: 1, b: 1, a: 0.62352943}
+  gasFogColor: {r: 1, g: 1, b: 1, a: 0.36078432}
+  initialGasFogColor: {r: 1, g: 1, b: 1, a: 0}
   speedMove: 4
+  isPlayerControlling: 0

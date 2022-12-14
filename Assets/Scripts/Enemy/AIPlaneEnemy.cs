@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
-public enum direction 
+public enum direction
 {
     Up, Down, Left, Right
 }
@@ -27,7 +25,7 @@ public enum startShoot
 public class AIPlaneEnemy : MonoBehaviour
 {
     [Header("Private Settings")]
-    private GameController _gameController;    
+    private GameController _gameController;
 
     [Header("AI Movement Settings")]
     public float speedMove;
@@ -35,16 +33,16 @@ public class AIPlaneEnemy : MonoBehaviour
     public float curveDegress;
     public float increment;
     public direction movDirection;
-        
-    [Header("Privates")]    
-    private float incremented;    
-    private float zRotation;    
-    private bool isCurve;    
+
+    [Header("Privates")]
+    private float incremented;
+    private float zRotation;
+    private bool isCurve;
     private bool isArrived;
     private bool leftSide;
     private bool isShooting;
     private bool isAiVisible;
-    
+
     [Header("Weapon Transform")]
     public Transform enemyWeapon;
 
@@ -61,25 +59,25 @@ public class AIPlaneEnemy : MonoBehaviour
     public int maxShoot;
 
     [Header("Type of Shoot Settings")]
-    
+
     public ammoReloadSelect amountAmmoReloaded;
     public int[] amountAmmoToReload;
     public shootTimerSelect shotTimerType;
     public float[] randShootTimer;
-    public reloadTimerSelect reloadTimerType;    
+    public reloadTimerSelect reloadTimerType;
     public float[] randReloadTimer;
 
 
     void Start()
     {
         _gameController = FindObjectOfType(typeof(GameController)) as GameController;
-       
-        
+
+
 
         zRotation = transform.eulerAngles.z;
     }
 
-    
+
     void Update()
     {
         singleMovementationCurve();
@@ -92,7 +90,7 @@ public class AIPlaneEnemy : MonoBehaviour
             case "playerShoot":
 
                 Destroy(collision.gameObject);
-                GameObject temp = Instantiate(_gameController.explosionPrefab, transform.position, _gameController.explosionPrefab.transform.localRotation);                
+                GameObject temp = Instantiate(_gameController.explosionPrefab, transform.position, _gameController.explosionPrefab.transform.localRotation);
 
                 spawnLoot();
 
@@ -114,7 +112,7 @@ public class AIPlaneEnemy : MonoBehaviour
     private void OnBecameVisible()
     {
         StartCoroutine("enemyStartShoot");
-        isAiVisible= true;
+        isAiVisible = true;
     }
     private void OnBecameInvisible()
     {
@@ -140,13 +138,13 @@ public class AIPlaneEnemy : MonoBehaviour
                 idItem = 0; // CoinBox
             }
 
-            Instantiate(_gameController.lootPrefabs[idItem], transform.position,  transform.localRotation = new Quaternion(0,0,0,0));
+            Instantiate(_gameController.lootPrefabs[idItem], transform.position, transform.localRotation = new Quaternion(0, 0, 0, 0));
         }
     }
 
     void singleMovementationCurve()
     {
-        switch(movDirection)
+        switch (movDirection)
         {
             case direction.Up:
                 if (transform.position.y >= placeToCurve && isCurve == false)
@@ -155,7 +153,7 @@ public class AIPlaneEnemy : MonoBehaviour
                 }
                 locomotionLogic();
                 break;
-                                
+
             case direction.Down:
                 if (transform.position.y <= placeToCurve && isCurve == false)
                 {
@@ -180,7 +178,7 @@ public class AIPlaneEnemy : MonoBehaviour
                 locomotionLogic();
                 break;
         }
-        
+
         transform.Translate(Vector3.down * speedMove * Time.deltaTime);
     }
 
@@ -231,18 +229,18 @@ public class AIPlaneEnemy : MonoBehaviour
 
     IEnumerator enemyStartShoot()
     {
-        switch(timerToStartShoot)
+        switch (timerToStartShoot)
         {
             case startShoot.immediately:
 
                 yield return new WaitForSecondsRealtime(0.2f);
-                
+
                 break;
 
             case startShoot.wait:
 
                 yield return new WaitForSecondsRealtime(startShootCooldown);
-                
+
                 break;
         }
         StartCoroutine("enemyShootTime");
@@ -294,5 +292,5 @@ public class AIPlaneEnemy : MonoBehaviour
         }
 
     }
-    
+
 }
