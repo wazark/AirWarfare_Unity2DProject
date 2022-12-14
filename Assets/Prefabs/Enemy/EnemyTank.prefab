@@ -161,13 +161,13 @@ MonoBehaviour:
   curveDegress: 0
   increment: 0
   movDirection: 1
-  isCanMove: 1
+  isCanMove: 0
   enemyWeapon: {fileID: 4726259110285437765}
   tagShot: 1
-  timerToStartShoot: 0
+  timerToStartShoot: 1
   bulletSize: 1.5
   idBullet: 7
-  startShootCooldown: 1
+  startShootCooldown: 1.5
   bulletSpeed: 8
   shootTimer: 1
   reloadCooldown: 2
