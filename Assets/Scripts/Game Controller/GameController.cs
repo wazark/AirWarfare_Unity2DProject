@@ -6,10 +6,18 @@ public enum tagBullets
 {
     Player, Enemy
 }
+public enum gameState
+{
+    Intro, GamePlay
+}
+
 public class GameController : MonoBehaviour
 {
     [Header("Private Settings")]
     public CharacterController _characterController;
+
+    [Header("Private Settings")]
+    public gameState currentState;
 
     [Header("Player Bullets Settings")]
     public GameObject[] bulletPrefab;
@@ -53,7 +61,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        
+        StartCoroutine("introGame");
     }
 
     void Update()
@@ -61,7 +69,7 @@ public class GameController : MonoBehaviour
         if(isPlayerAlive == true)
         {
             playerMoveLimit();
-            //cameraPositionControll();
+            
         }
         
 
@@ -77,11 +85,11 @@ public class GameController : MonoBehaviour
 
     private void LateUpdate()
     {
-        //cameraPositionControll();
+        if(currentState == gameState.GamePlay ) 
+        {
+            sceneMovement();
+        }
         
-
-        
-        sceneMovement();
     }
 
     void cameraPositionControll()
@@ -178,5 +186,11 @@ public class GameController : MonoBehaviour
         yield return new WaitForEndOfFrame();
         _characterController.StartCoroutine("spawnNoDamage");
         isPlayerAlive = true;
+    }
+    IEnumerator introGame()
+    {
+       // _characterController.gasFogSR.enabled = false;
+
+        return null;
     }
 }

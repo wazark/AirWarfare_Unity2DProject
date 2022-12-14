@@ -11,10 +11,12 @@ public class CharacterController : MonoBehaviour
     private Rigidbody2D playerRB;
     private SpriteRenderer playerSR;
 
-
-    [Header("Player Bullets")]
+    [Header("Player GameObjects")]
     public Transform playerWeapon;
     public Transform gasFog;
+    public SpriteRenderer gasFogSR;
+
+    [Header("Player Bullets")]    
     public tagBullets tagShot;
     public float bulletSize;
     public int idBullet;
@@ -37,12 +39,17 @@ public class CharacterController : MonoBehaviour
 
         playerRB = GetComponent<Rigidbody2D>();
         playerSR = GetComponent<SpriteRenderer>();
+        gasFogSR = GetComponent<SpriteRenderer>();
     }
 
     
     void Update()
     {
         playerLocomotion();
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            _gameController.hitPlayer();            
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -94,19 +101,26 @@ public class CharacterController : MonoBehaviour
     {
         Collider2D col = GetComponent< Collider2D >();
         col.enabled = false;
-        playerSR.color = noDamgeColor;        
+        playerSR.color = noDamgeColor;
+        gasFogSR.color = noDamgeColor;
         StartCoroutine("respawnVisualEffect");
+        print("mudou para a cor nodamage");
         yield return new WaitForSecondsRealtime(_gameController.cooldownNoDamage);
         col.enabled = true;
         playerSR.color = Color.white;
+        gasFogSR.color = Color.white;
         playerSR.enabled = true;
+        gasFogSR.enabled = true;
         StopCoroutine("respawnVisualEffect");
-        
+        print("parou a coroutine");
+
     }
     IEnumerator respawnVisualEffect()
     {
         yield return new WaitForSecondsRealtime(0.1f);
-            playerSR.enabled = !playerSR.enabled;
+        print("piscando");
+        playerSR.enabled = false;
+        gasFogSR.enabled = !gasFogSR.enabled;
 
         StartCoroutine("respawnVisualEffect");
 
