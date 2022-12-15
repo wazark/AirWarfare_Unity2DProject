@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public enum tagBullets
 {
@@ -15,12 +17,11 @@ public class GameController : MonoBehaviour
     [Header("Private Settings")]
     public CharacterController _characterController;
 
-    [Header("Private Settings")]
+    [Header("Game State Settings")]
     public gameState currentState;
 
     [Header("Player Bullets Settings")]
     public GameObject[] bulletPrefab;
-
 
     [Header("Enemy Bullets Prefabs")]
     public GameObject[] enemyBulletPrefab;
@@ -38,6 +39,7 @@ public class GameController : MonoBehaviour
     public int idPlayerPlane;
     public int currentLife;
     public int maxLife;
+    public int currentCoins;
     public float cooldownSpawnPlayer;
     public float cooldownNoDamage;
     public bool isGodModeOn;
@@ -73,6 +75,11 @@ public class GameController : MonoBehaviour
     public Vector3 ShadowDefaultSize;
     public Transform planeInitialPosition;
 
+    [Header("User Interface")]
+    public Text txtCoins;
+    public Text txtLifes;
+
+
 
 
 
@@ -81,8 +88,8 @@ public class GameController : MonoBehaviour
     {
         StartCoroutine("introGame");
         isAutoPilot = true;
-
-
+        updateLifeHuD();
+        txtCoins.text = currentCoins.ToString();
     }
 
     void Update()
@@ -91,9 +98,6 @@ public class GameController : MonoBehaviour
         {
             playerMoveLimit();
         }
-
-
-
     }
     private void FixedUpdate()
     {
@@ -182,6 +186,7 @@ public class GameController : MonoBehaviour
             Destroy(_characterController.gameObject);
             isPlayerAlive = false;
             currentLife--;
+           updateLifeHuD();
 
             if (currentLife >= 0)
             {
@@ -194,11 +199,30 @@ public class GameController : MonoBehaviour
         }
     }
 
+    void updateLifeHuD()
+    {
+        if(currentLife <0)
+        {
+            currentLife= 0;
+        }
+        else if(currentLife > maxLife) 
+        {
+            currentLife= maxLife;
+        }
+        txtLifes.text = "x" + currentLife.ToString();
+    }
+
+    public void addCoins(int Points)
+    {
+        currentCoins = +Points;
+        txtCoins.text = currentCoins.ToString();
+    }
+
     void introToGameplay()
     {
         if (currentState == gameState.GamePlay)
         {
-            //sceneMovement();
+            
 
             if (isAutoPilot == true)
             {
@@ -209,9 +233,7 @@ public class GameController : MonoBehaviour
             if(mainCamera.orthographicSize <= 5f)
             {
                 mainCamera.orthographicSize += 0.01f;
-            }    
-            
-
+            } 
         }
         else if (currentState == gameState.Intro)
         {

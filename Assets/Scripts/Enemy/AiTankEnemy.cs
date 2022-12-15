@@ -24,6 +24,11 @@ public class AiTankEnemy : MonoBehaviour
     private bool isAiVisible;
     private int idItemLoot;
 
+    [Header("Coins Settings")]
+    public int coinsToAdd;
+    public int buffCoinsMultiply;
+    public int coinsAutoDestroy;
+
     [Header("Weapon Transform")]
     public Transform enemyWeapon;
 
@@ -67,6 +72,7 @@ public class AiTankEnemy : MonoBehaviour
         {
             case "playerShoot":
 
+                _gameController.addCoins(coinsToAdd * buffCoinsMultiply);
                 Destroy(collision.gameObject);
                 GameObject temp = Instantiate(_gameController.explosionPrefab, transform.position, _gameController.explosionPrefab.transform.localRotation);
 
@@ -78,10 +84,12 @@ public class AiTankEnemy : MonoBehaviour
 
             case "Player":
 
+                _gameController.addCoins(coinsAutoDestroy * buffCoinsMultiply);
                 temp = Instantiate(_gameController.explosionPrefab, transform.position, _gameController.explosionPrefab.transform.localRotation);
 
                 spawnLoot();
-                Destroy(this.gameObject);
+                _gameController.hitPlayer();
+
 
                 break;
         }
@@ -98,34 +106,28 @@ public class AiTankEnemy : MonoBehaviour
     }
     void spawnLoot()
     {
-
+        int idItem;
         int rand = Random.Range(0, 100);
         if (rand < 50)
         {
             rand = Random.Range(0, 100);
             if (rand > 85)
             {
-                idItemLoot = 2; // BombBox
+                idItem = 2; // BombBox
             }
             else if (rand > 50)
             {
-                idItemLoot = 1; // HealthBox
+                idItem = 1; // HealthBox
             }
             else
             {
-                idItemLoot = 0; // CoinBox
+                idItem = 0; // CoinBox
             }
-
-            StartCoroutine("cooldownLoots");
-            //Instantiate(_gameController.lootPrefabs[idItem], transform.position, transform.localRotation = new Quaternion(0, 0, 0, 0));
+                        
+            Instantiate(_gameController.lootPrefabs[idItem], transform.position, transform.localRotation = new Quaternion(0, 0, 0, 0));
         }
     }
-    IEnumerator cooldownLoots()
-    {
-        yield return new WaitForSecondsRealtime(_gameController.cooldownToShowLoots);
-
-        Instantiate(_gameController.lootPrefabs[idItemLoot], transform.position, transform.localRotation = new Quaternion(0, 0, 0, 0)); // não altera a rotação dos loots caso o inimigo faça curvas 
-    }
+    
     void singleMovementationCurve()
     {
         switch (movDirection)

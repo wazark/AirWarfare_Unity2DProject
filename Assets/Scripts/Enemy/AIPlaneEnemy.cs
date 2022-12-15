@@ -43,6 +43,11 @@ public class AIPlaneEnemy : MonoBehaviour
     private bool isShooting;
     private bool isAiVisible;
 
+    [Header("Coins Settings")]
+    public int coinsToAdd;
+    public int buffCoinsMultiply;
+    public int coinsAutoDestroy;
+
     [Header("Weapon Transform")]
     public Transform enemyWeapon;
 
@@ -89,6 +94,7 @@ public class AIPlaneEnemy : MonoBehaviour
         {
             case "playerShoot":
 
+                _gameController.addCoins(coinsToAdd * buffCoinsMultiply);
                 Destroy(collision.gameObject);
                 GameObject temp = Instantiate(_gameController.explosionPrefab, transform.position, _gameController.explosionPrefab.transform.localRotation);
 
@@ -100,10 +106,11 @@ public class AIPlaneEnemy : MonoBehaviour
 
             case "Player":
 
+                _gameController.addCoins(coinsAutoDestroy * buffCoinsMultiply);
                 temp = Instantiate(_gameController.explosionPrefab, transform.position, _gameController.explosionPrefab.transform.localRotation);
 
                 spawnLoot();
-                Destroy(this.gameObject);
+                _gameController.hitPlayer();
 
                 break;
         }
