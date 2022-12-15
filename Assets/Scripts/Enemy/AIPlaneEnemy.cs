@@ -111,6 +111,7 @@ public class AIPlaneEnemy : MonoBehaviour
 
                 spawnLoot();
                 _gameController.hitPlayer();
+                Destroy(this.gameObject);
 
                 break;
         }

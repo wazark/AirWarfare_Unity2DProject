@@ -214,7 +214,7 @@ public class GameController : MonoBehaviour
 
     public void addCoins(int Points)
     {
-        currentCoins = +Points;
+        currentCoins += Points;
         txtCoins.text = currentCoins.ToString();
     }
 

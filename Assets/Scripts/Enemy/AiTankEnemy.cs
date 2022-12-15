@@ -89,6 +89,7 @@ public class AiTankEnemy : MonoBehaviour
 
                 spawnLoot();
                 _gameController.hitPlayer();
+                Destroy(this.gameObject);
 
 
                 break;
